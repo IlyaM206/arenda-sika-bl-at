@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ManagerWindow</class>
+ <widget class="QMainWindow" name="ManagerWindow">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>1000</width><height>600</height></rect></property>
+  <property name="windowTitle"><string>Аренда — менеджер</string></property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout">
+    <item>
+     <widget class="QTabWidget" name="tabs">
+      <widget class="QWidget" name="scootersTab">
+       <attribute name="title"><string>Самокаты</string></attribute>
+       <layout class="QVBoxLayout" name="scootersLayout">
+        <item><widget class="QTableWidget" name="scootersTable"><property name="columnCount"><number>5</number></property><column><property name="text"><string>ID</string></property></column><column><property name="text"><string>Номер</string></property></column><column><property name="text"><string>Модель</string></property></column><column><property name="text"><string>Заряд %</string></property></column><column><property name="text"><string>Статус</string></property></column></widget></item>
+        <item>
+         <layout class="QHBoxLayout" name="scootersButtonsLayout">
+          <item><widget class="QPushButton" name="refreshScootersButton"><property name="text"><string>Обновить</string></property></widget></item>
+          <item><widget class="QPushButton" name="addScooterButton"><property name="text"><string>Добавить</string></property></widget></item>
+          <item><widget class="QPushButton" name="deleteScooterButton"><property name="text"><string>Удалить</string></property></widget></item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="rentalsTab">
+       <attribute name="title"><string>Все аренды</string></attribute>
+       <layout class="QVBoxLayout" name="rentalsLayout">
+        <item><widget class="QTableWidget" name="rentalsTable"><property name="columnCount"><number>9</number></property><column><property name="text"><string>ID</string></property></column><column><property name="text"><string>Пользователь</string></property></column><column><property name="text"><string>Номер</string></property></column><column><property name="text"><string>Модель</string></property></column><column><property name="text"><string>Тариф</string></property></column><column><property name="text"><string>Начало</string></property></column><column><property name="text"><string>Конец</string></property></column><column><property name="text"><string>Статус</string></property></column><column><property name="text"><string>Сумма</string></property></column></widget></item>
+        <item><widget class="QPushButton" name="refreshRentalsButton"><property name="text"><string>Обновить</string></property></widget></item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="usersTab">
+       <attribute name="title"><string>Пользователи</string></attribute>
+       <layout class="QVBoxLayout" name="usersLayout">
+        <item><widget class="QTableWidget" name="usersTable"><property name="columnCount"><number>4</number></property><column><property name="text"><string>ID</string></property></column><column><property name="text"><string>Логин</string></property></column><column><property name="text"><string>ФИО</string></property></column><column><property name="text"><string>Роль</string></property></column></widget></item>
+        <item><widget class="QPushButton" name="refreshUsersButton"><property name="text"><string>Обновить</string></property></widget></item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
