@@ -119,3 +119,68 @@ def rent(uid, sid, tid):
         )
 
 
+def finish(rid, uid):
+    with engine.begin() as c:
+        r = c.execute(
+            text("""
+                SELECT scooter_id, tariff_id,
+                GREATEST(1, CEIL(TIMESTAMPDIFF(
+                    SECOND, start_time, NOW()
+                ) / 60)) AS mins
+                FROM rentals
+                WHERE id=:id AND user_id=:uid AND status='active'
+                FOR UPDATE
+            """),
+            {"id": rid, "uid": uid}
+        ).mappings().first()
+
+        if not r:
+            raise ValueError("Активная аренда не найдена.")
+
+        t = c.execute(
+            text("SELECT price_per_minute, unlock_fee FROM tariffs WHERE id=:id"),
+            {"id": r["tariff_id"]}
+        ).mappings().first()
+
+        if not t:
+            raise ValueError("Тариф не найден.")
+
+        total = (
+            Decimal(t["unlock_fee"])
+            + Decimal(t["price_per_minute"]) * int(r["mins"])
+        ).quantize(Decimal("0.01"))
+
+        c.execute(
+            text("""
+                UPDATE rentals
+                SET status='completed', end_time=NOW(), total_amount=:sum
+                WHERE id=:id
+            """),
+            {"sum": total, "id": rid}
+        )
+
+        c.execute(
+            text("UPDATE scooters SET status='available' WHERE id=:id"),
+            {"id": r["scooter_id"]}
+        )
+
+
+def add_scooter(serial, model):
+    write(
+        "INSERT INTO scooters(serial_number, model, battery_level, status) "
+        "VALUES(:s, :m, 100, 'available')",
+        {"s": serial.strip(), "m": model.strip()}
+    )
+
+
+def delete_scooter(sid):
+    if one("SELECT id FROM rentals WHERE scooter_id=:id LIMIT 1", {"id": sid}):
+        raise ValueError("Нельзя удалить самокат из истории аренд.")
+
+    if not one(
+        "SELECT id FROM scooters WHERE id=:id AND status!='rented'",
+        {"id": sid}
+    ):
+        raise ValueError("Самокат не найден или сейчас арендован.")
+
+    write("DELETE FROM scooters WHERE id=:id", {"id": sid})
