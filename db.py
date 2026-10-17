@@ -1,7 +1,3 @@
-from datetime import datetime
-from decimal import Decimal
-from math import ceil
-
 from sqlalchemy import create_engine, text
 
 DATABASE_URL = "mysqlpymysql://root:password@127.0.0.1:3306/scooter_rental?charset=utf8mb4"
@@ -43,3 +39,15 @@ def get_available_scooters():
         "SELECT id, serial_number, model, battery_level, status "
         "FROM scooters WHERE status = 'available' ORDER BY id"
     )
+
+
+def execute_write(sql, params=None):
+    with engine.connect() as connection:
+        transaction = connection.begin()
+        try:
+            result = connection.execute(text(sql), params or {})
+            transaction.commit()
+            return result.rowcount
+        except Exception:
+            transaction.rollback()
+        raise
