@@ -115,3 +115,40 @@ class UserLogic:
             self.refresh()
 
 
+class ManagerLogic:
+    def __init__(self, window):
+        self.window = window
+        self.window.scootersTable.setHorizontalHeaderLabels(SCOOTER_HEADERS)
+        self.window.rentalsTable.setHorizontalHeaderLabels(RENTAL_HEADERS)
+        self.window.usersTable.setHorizontalHeaderLabels(["ID", "Логин", "ФИО", "Роль"])
+        for table in (self.window.scootersTable, self.window.rentalsTable, self.window.usersTable):
+            table.horizontalHeader().setStretchLastSection(True)
+
+        self.window.refreshScootersButton.clicked.connect(self.refresh)
+        self.window.refreshRentalsButton.clicked.connect(self.refresh)
+        self.window.refreshUsersButton.clicked.connect(self.refresh)
+        self.window.addScooterButton.clicked.connect(self.add_scooter)
+        self.window.deleteScooterButton.clicked.connect(self.delete_scooter)
+        self.refresh()
+
+    def refresh(self):
+        load_table(self.window, self.window.scootersTable, db.scooters, SCOOTER_FIELDS)
+        load_table(self.window, self.window.rentalsTable, db.rentals, RENTAL_FIELDS)
+        load_table(self.window, self.window.usersTable, db.users, USER_FIELDS)
+
+    def add_scooter(self):
+        serial, ok = QInputDialog.getText(self.window, "Новый самокат", "Серийный номер:")
+        if not ok or not serial.strip():
+            return
+        model, ok = QInputDialog.getText(self.window, "Новый самокат", "Модель:")
+        if ok and model.strip() and run(self.window, db.add_scooter, serial, model):
+            self.refresh()
+
+    def delete_scooter(self):
+        scooter_id = selected_id(self.window.scootersTable)
+        if scooter_id is None:
+            QMessageBox.warning(self.window, "Самокаты", "Выберите самокат.")
+            return
+        answer = QMessageBox.question(self.window, "Удаление", "Удалить выбранный самокат?")
+        if answer == QMessageBox.Yes and run(self.window, db.delete_scooter, scooter_id):
+            self.refresh()
