@@ -71,3 +71,47 @@ class LoginLogic:
             self.window.close()
         except Exception as e:
             error(self.window, e)
+
+
+class UserLogic:
+    def __init__(self, window, user):
+        self.window, self.user = window, user
+        self.window.freeTable.setHorizontalHeaderLabels(SCOOTER_HEADERS)
+        self.window.historyTable.setHorizontalHeaderLabels(RENTAL_HEADERS)
+        self.window.freeTable.horizontalHeader().setStretchLastSection(True)
+        self.window.historyTable.horizontalHeader().setStretchLastSection(True)
+        self.window.refreshFreeButton.clicked.connect(self.refresh)
+        self.window.refreshHistoryButton.clicked.connect(self.refresh)
+        self.window.rentButton.clicked.connect(self.rent)
+        self.window.finishButton.clicked.connect(self.finish)
+
+        try:
+            for tariff in db.tariffs():
+                title = f"{tariff['name']} — {tariff['price_per_minute']} руб./мин + {tariff['unlock_fee']} руб."
+                self.window.tariffCombo.addItem(title, tariff["id"])
+        except Exception as e:
+            error(self.window, e)
+        self.refresh()
+
+    def refresh(self):
+        load_table(self.window, self.window.freeTable, db.scooters, SCOOTER_FIELDS, True)
+        load_table(self.window, self.window.historyTable, db.rentals, RENTAL_FIELDS, self.user["id"])
+
+    def rent(self):
+        scooter_id = selected_id(self.window.freeTable)
+        tariff_id = self.window.tariffCombo.currentData()
+        if scooter_id is None or tariff_id is None:
+            QMessageBox.warning(self.window, "Аренда", "Выберите самокат и тариф.")
+            return
+        if run(self.window, db.rent, self.user["id"], scooter_id, tariff_id):
+            self.refresh()
+
+    def finish(self):
+        rental_id = selected_id(self.window.historyTable)
+        if rental_id is None:
+            QMessageBox.warning(self.window, "Аренда", "Выберите аренду.")
+            return
+        if run(self.window, db.finish, rental_id, self.user["id"]):
+            self.refresh()
+
+
