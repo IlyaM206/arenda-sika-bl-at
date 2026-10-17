@@ -45,4 +45,29 @@ def run(window, function, *args):
         return False
 
 
+class LoginLogic:
+    def __init__(self, window):
+        self.window = window
+        self.window.loginButton.clicked.connect(self.login)
+        self.window.passwordEdit.returnPressed.connect(self.login)
+        self.main_window = None
+        self.page_logic = None
 
+    def login(self):
+        try:
+            user = db.login(self.window.usernameEdit.text(), self.window.passwordEdit.text())
+            if not user:
+                QMessageBox.warning(self.window, "Вход", "Неверный логин или пароль.")
+                return
+
+            name = "manager.ui" if user["role"] == "manager" else "user.ui"
+            self.main_window = uic.loadUi(str(UI / name))
+            if user["role"] == "manager":
+                self.page_logic = ManagerLogic(self.main_window)
+            else:
+                self.page_logic = UserLogic(self.main_window, user)
+            self.main_window.setWindowTitle("Аренда — " + user["full_name"])
+            self.main_window.show()
+            self.window.close()
+        except Exception as e:
+            error(self.window, e)
