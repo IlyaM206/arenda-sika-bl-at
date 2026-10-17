@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UserWindow</class>
+ <widget class="QMainWindow" name="UserWindow">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>1000</width><height>600</height></rect></property>
+  <property name="windowTitle"><string>Аренда — пользователь</string></property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout">
+    <item>
+     <widget class="QTabWidget" name="tabs">
+      <widget class="QWidget" name="freeTab">
+       <attribute name="title"><string>Свободные самокаты</string></attribute>
+       <layout class="QVBoxLayout" name="freeLayout">
+        <item>
+         <layout class="QHBoxLayout" name="tariffLayout">
+          <item><widget class="QLabel" name="tariffLabel"><property name="text"><string>Тариф:</string></property></widget></item>
+          <item><widget class="QComboBox" name="tariffCombo"/></item>
+         </layout>
+        </item>
+        <item><widget class="QTableWidget" name="freeTable"><property name="columnCount"><number>5</number></property><column><property name="text"><string>ID</string></property></column><column><property name="text"><string>Номер</string></property></column><column><property name="text"><string>Модель</string></property></column><column><property name="text"><string>Заряд %</string></property></column><column><property name="text"><string>Статус</string></property></column></widget></item>
+        <item>
+         <layout class="QHBoxLayout" name="freeButtonsLayout">
+          <item><widget class="QPushButton" name="refreshFreeButton"><property name="text"><string>Обновить</string></property></widget></item>
+          <item><widget class="QPushButton" name="rentButton"><property name="text"><string>Арендовать</string></property></widget></item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="historyTab">
+       <attribute name="title"><string>Мои аренды</string></attribute>
+       <layout class="QVBoxLayout" name="historyLayout">
+        <item><widget class="QTableWidget" name="historyTable"><property name="columnCount"><number>9</number></property><column><property name="text"><string>ID</string></property></column><column><property name="text"><string>Пользователь</string></property></column><column><property name="text"><string>Номер</string></property></column><column><property name="text"><string>Модель</string></property></column><column><property name="text"><string>Тариф</string></property></column><column><property name="text"><string>Начало</string></property></column><column><property name="text"><string>Конец</string></property></column><column><property name="text"><string>Статус</string></property></column><column><property name="text"><string>Сумма</string></property></column></widget></item>
+        <item>
+         <layout class="QHBoxLayout" name="historyButtonsLayout">
+          <item><widget class="QPushButton" name="refreshHistoryButton"><property name="text"><string>Обновить</string></property></widget></item>
+          <item><widget class="QPushButton" name="finishButton"><property name="text"><string>Завершить</string></property></widget></item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
