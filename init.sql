@@ -43,3 +43,28 @@ CREATE TABLE rentals (
     INDEX idx_rentals_user_status (user_id, status),
     INDEX idx_rentals_scooter_status (scooter_id, status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
++INSERT INTO users (id, username, password, full_name, role) VALUES
++(1, 'manager', 'manager123', 'Иван Менеджеров', 'manager'),
++(2, 'user1', 'user123', 'Алексей Смирнов', 'user'),
++(3, 'user2', 'user123', 'Мария Иванова', 'user'),
++(4, 'user3', 'user123', 'Дмитрий Петров', 'user');
++
++INSERT INTO scooters (id, serial_number, model, battery_level, status) VALUES
++(1, 'SC-1001', 'Xiaomi Scooter 4', 96, 'available'),
++(2, 'SC-1002', 'Ninebot Max G30', 82, 'rented'),
++(3, 'SC-1003', 'Kugoo S3 Pro', 74, 'available'),
++(4, 'SC-1004', 'Xiaomi Mi Electric 3', 15, 'maintenance'),
++(5, 'SC-1005', 'Ninebot F2', 100, 'available');
++
++INSERT INTO tariffs (id, name, price_per_minute, unlock_fee, description, is_active) VALUES
++(1, 'Эконом', 3.00, 15.00, 'Недорогие короткие поездки', TRUE),
++(2, 'Стандарт', 5.00, 20.00, 'Обычный тариф по минутам', TRUE),
++(3, 'Комфорт', 7.50, 10.00, 'Повышенная ставка за минуту', TRUE),
++(4, 'Архивный тариф', 2.00, 0.00, 'Не отображается при создании аренды', FALSE);
++
++INSERT INTO rentals (id, user_id, scooter_id, tariff_id, start_time, end_time, total_amount, status) VALUES
++(1, 2, 2, 2, DATE_SUB(NOW(), INTERVAL 15 MINUTE), NULL, 0.00, 'active'),
++(2, 3, 1, 1, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY) + INTERVAL 24 MINUTE, 87.00, 'completed'),
++(3, 4, 3, 3, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY) + INTERVAL 18 MINUTE, 145.00, 'completed'),
++(4, 2, 5, 1, DATE_SUB(NOW(), INTERVAL 5 HOUR), DATE_SUB(NOW(), INTERVAL 5 HOUR) + INTERVAL 12 MINUTE, 51.00, 'completed');
